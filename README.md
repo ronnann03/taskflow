@@ -14,9 +14,9 @@ Sistema de gestión de tareas y empleados construido con Laravel 11, JavaScript 
 - ✅ API REST con 10 endpoints (CRUD completo)
 - ✅ Autenticación con tokens Bearer (Sanctum)
 - ✅ Sistema de roles (admin / developer / designer)
-- ✅ Frontend con login real y token en localStorage
+- ✅ Frontend responsive con login real y token en localStorage
 - ✅ Tareas en tiempo real con WebSockets (Reverb + Pusher)
-- ✅ Export de reporte en PDF
+- ✅ Export de reporte en PDF con botón en el frontend
 - ✅ Cliente C# que consume la API REST
 - ✅ 10 tests automatizados con PHPUnit
 
@@ -52,6 +52,17 @@ cd TaskFlowClient
 dotnet run
 ```
 
+### Script de inicio rápido (Windows)
+```powershell
+# Ejecutar como Administrador
+cd C:\Users\Ronaldinhoo\taskflow
+.\start-taskflow.ps1
+```
+
+## Credenciales de prueba
+- **Email:** admin@taskflow.com
+- **Password:** Admin2024!
+
 ## Endpoints API
 
 | Método | Ruta | Descripción | Auth |
@@ -84,5 +95,38 @@ php artisan test
 Tests: 10 passed (16 assertions)
 ```
 
+## Estructura del proyecto
+```
+taskflow/
+├── app/
+│   ├── Events/TaskUpdated.php
+│   ├── Http/Controllers/Api/
+│   │   ├── AuthController.php
+│   │   ├── EmployeeController.php
+│   │   ├── TaskController.php
+│   │   └── ReportController.php
+│   ├── Http/Middleware/CheckRole.php
+│   └── Models/
+│       ├── Employee.php
+│       ├── Task.php
+│       └── User.php
+├── database/migrations/
+├── resources/views/
+│   ├── layouts/app.blade.php
+│   ├── login.blade.php
+│   ├── employees.blade.php
+│   ├── tasks.blade.php
+│   └── reports/tasks.blade.php
+├── routes/
+│   ├── api.php
+│   └── web.php
+├── tests/Feature/
+│   ├── EmployeeTest.php
+│   └── TaskTest.php
+└── TaskFlowClient/          # Cliente C# (.NET 10)
+    └── Program.cs
+```
+
 ## Autor
 Ronaldinho — Proyecto de aprendizaje 
+👉 [github.com/ronnann03](https://github.com/ronnann03)
