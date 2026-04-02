@@ -2,8 +2,11 @@
 
 @section('content')
 <div class="bg-white rounded shadow p-6">
-    <h1 class="text-2xl font-bold mb-4 text-blue-600">Tareas
-        <span id="live-indicator" class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2">● En vivo</span>
+    <h1 class="text-2xl font-bold mb-4 text-blue-600 flex items-center justify-between">
+    <span>Tareas <span id="live-indicator" class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded ml-2">● En vivo</span></span>
+    <button onclick="descargarPDF()" class="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700 flex items-center gap-2">
+        📄 Descargar PDF
+    </button>
     </h1>
 
     <div class="mb-6 grid grid-cols-2 gap-3">
@@ -136,6 +139,23 @@ async function createTask() {
 async function deleteTask(id) {
     await axios.delete(`${api}/tasks/${id}`);
     loadTasks();
+}
+
+async function descargarPDF() {
+    try {
+        const res = await axios.get(`${api}/reports/pdf`, {
+            responseType: 'blob'
+        });
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'taskflow-reporte.pdf');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } catch (e) {
+        alert('Error al descargar el PDF');
+    }
 }
 
 loadEmployeeOptions();
