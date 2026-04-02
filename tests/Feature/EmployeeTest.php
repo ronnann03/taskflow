@@ -3,12 +3,23 @@
 namespace Tests\Feature;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EmployeeTest extends TestCase
 {
     use RefreshDatabase;
+
+    private User $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+    }
 
     public function test_puede_listar_empleados(): void
     {
@@ -18,7 +29,7 @@ class EmployeeTest extends TestCase
             'role'  => 'admin',
         ]);
 
-        $response = $this->getJson('/api/v1/employees');
+        $response = $this->actingAs($this->admin)->getJson('/api/v1/employees');
 
         $response->assertStatus(200)
                  ->assertJsonCount(1);
@@ -26,7 +37,7 @@ class EmployeeTest extends TestCase
 
     public function test_puede_crear_empleado(): void
     {
-        $response = $this->postJson('/api/v1/employees', [
+        $response = $this->actingAs($this->admin)->postJson('/api/v1/employees', [
             'name'  => 'Nuevo Empleado',
             'email' => 'nuevo@test.com',
             'role'  => 'developer',
@@ -38,7 +49,7 @@ class EmployeeTest extends TestCase
 
     public function test_no_puede_crear_empleado_sin_email(): void
     {
-        $response = $this->postJson('/api/v1/employees', [
+        $response = $this->actingAs($this->admin)->postJson('/api/v1/employees', [
             'name' => 'Sin Email',
             'role' => 'admin',
         ]);
@@ -54,7 +65,7 @@ class EmployeeTest extends TestCase
             'role'  => 'designer',
         ]);
 
-        $response = $this->deleteJson("/api/v1/employees/{$employee->id}");
+        $response = $this->actingAs($this->admin)->deleteJson("/api/v1/employees/{$employee->id}");
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('employees', ['id' => $employee->id]);
