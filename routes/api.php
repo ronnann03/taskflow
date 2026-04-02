@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\ReportController;
 
 // Rutas públicas
 Route::prefix('v1')->group(function () {
@@ -19,6 +20,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     // Solo admin puede gestionar empleados
     Route::apiResource('employees', EmployeeController::class)->middleware('role:admin');
 
-    // Tareas — todos autenticados pueden acceder
+    // Tareas
     Route::apiResource('tasks', TaskController::class);
+
+    // Reportes
+    Route::get('reports/pdf', [ReportController::class, 'pdf']);
 });
