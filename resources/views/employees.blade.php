@@ -35,6 +35,13 @@
 
 <script>
 const api = 'http://127.0.0.1:8000/api/v1';
+const token = localStorage.getItem('token');
+
+if (!token) {
+    window.location.href = '/login';
+}
+
+axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
 async function loadEmployees() {
     const res = await axios.get(`${api}/employees`);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\TaskUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -34,6 +35,8 @@ class TaskController extends Controller
         ]);
 
         $task = Task::create($data);
+        broadcast(new TaskUpdated($task, 'created'))->toOthers();
+
         return response()->json($task, 201);
     }
 
@@ -65,6 +68,8 @@ class TaskController extends Controller
         ]);
 
         $task->update($data);
+        broadcast(new TaskUpdated($task, 'updated'))->toOthers();
+
         return response()->json($task);
     }
 
@@ -77,6 +82,8 @@ class TaskController extends Controller
         }
 
         $task->delete();
+        broadcast(new TaskUpdated($task, 'deleted'))->toOthers();
+
         return response()->json(['message' => 'Task deleted']);
     }
 }
