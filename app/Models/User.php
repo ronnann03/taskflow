@@ -14,6 +14,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'employee_id',
     ];
 
     protected $hidden = [
@@ -25,7 +27,18 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
+
